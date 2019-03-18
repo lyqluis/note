@@ -1,0 +1,133 @@
+/*
+a:link{
+    color:blue;
+}
+a:visited{
+    color:green;
+}
+*/
+.css3{
+    color: darkred;
+}
+#font{
+    background-color: darksalmon;
+}
+#text{
+    background-color: lightgreen;
+}
+#toolbar{
+    background-color: blue;
+    color:white;
+}
+#toolbar a{
+    color: inherit;
+}
+#v{
+    font-family:verdana;
+}
+#h{
+    font-family:helvetica;
+}    
+#a{
+    font-family:arial;
+}    
+#s{
+    font-family:serif;
+}
+#sa{
+    font-family:sana-serif;
+}
+#m{
+    font-family:monospace;
+}
+#c{
+    font-family:cursive;
+}
+#f{
+    font-family:fantasy;
+}
+b{
+    font-weight: bolder;
+}
+#border{
+    background-color: wheat;
+    border: 5px solid black;
+}
+#box{
+    background-color: blueviolet;
+    padding: 30px;
+}
+#content{
+    background-color: deeppink;
+}
+#flexbox{
+    background-color: lightskyblue;
+}
+#shaizibuju{
+    display: flex;
+    justify-content: space-between;
+}
+.pip{
+    margin: 4px;
+    height:24px;
+    width: 24px;
+    display: block;
+    background-color:#333;
+    border-radius: 50%;
+    box-shadow: 0 -3px #555 inset, inset 0 3px #111;
+}
+[class$='face']{
+    margin: 5px;
+    padding: 4px;
+    height: 104px;
+    width: 104px;
+    object-fit: contain;
+    background-color: #e7e7e7;
+    border-radius: 10%;
+    box-shadow: 0 5px white inset,
+                0 -5px #bbb inset,
+                5px 0 #d7d7d7 inset,
+                -5px 0 #d7d7d7 inset;
+}
+.first-face{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.second-face{
+    display: flex;
+    justify-content: space-between;
+}
+.second-face .pip:nth-of-type(2){
+    align-self: flex-end;
+}
+.third-face{
+    display: flex;
+    justify-content: space-between;
+}
+.third-face .pip:nth-of-type(2){
+    align-self: center;
+}
+.third-face .pip:nth-of-type(3){
+    align-self: flex-end;
+}
+.forth-face{
+    display: flex;
+    justify-content: space-between;
+}
+.column{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+.fifth-face{
+    display: flex;
+    justify-content: space-between;
+}
+.fifth-face .column:nth-of-type(2){
+    justify-content: center;
+}
+.sixth-face{
+    display: flex;
+    justify-content: space-between;
+}

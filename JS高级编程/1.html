@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+    <input type="button" id="mybtn" onclick="ceyan()" value="ceyan">
+    <input type="button" onclick="displayInfo({name:'Nicholas',age:29})" value="anniu">
+    <form>
+        <br>
+        <select name="" id="">
+            <option value="">1</option>
+            <option value="">2</option> 
+        </select>
+        <p>只允许输入数值</p>
+        <input type="text" id="txt" value="输入" style="background-color: whitesmoke">
+        <p>获得焦点，改变颜色；输入非数值，改变颜色；失去焦点，改变颜色</p>
+        <p>p455(427)自动切换焦点，输入上海／北京区号，电话号码</p>
+        <input type="text" id="tel1" maxlength="3" size="3">
+        <input type="text" id="tel2" maxlength="8" size="8">
+        <p>富文本编辑</p>
+        <iframe src="blank.html" id="fuwenben" frameborder="0" style="height: 200px; width: 500px; background-color: wheat" name="fuwenben">
+            <textarea name="" id="" cols="30" rows="10"></textarea>
+        </iframe>
+    </form>
+    <!--自定义右鍵上下文菜单
+    <div id="mydiv" style="width: 200px; height: 200px; background-color: aqua">contextmenu</div>
+    <ul id="menu" style="position: absolute; visibility: hidden; background-color: aquamarine" >
+        <li>1</li>
+        <li>2</li>
+        <li>3</li>
+    </ul>
+    <br>-->
+
+    <!--<table boerder = '1' width = '100%'>
+        <tbody>
+            <tr>
+                <td>Cell 1,1</td>
+                <td>Cell 1,2</td>
+            </tr>
+            <tr>
+                <td>Cell 2,1</td>
+                <td>Cell 2,2</td>
+            </tr>
+        </tbody>
+    </table>-->
+    <!--p507(489) 插入多媒体-->
+    <div>
+        <p>视频</p>
+        <video src="./tweetsip.mp4" height="270px" width="480px" controls='controls'>
+            video player not available <!--备选文字-->
+        </video>
+    </div>
+    <div>
+        <input type="button" id="play" value="play">
+        <span id="curtime">0</span>/<span id="duration">0</span>
+    </div>
+    <script src="1.js"></script>
+</body>
+</html>

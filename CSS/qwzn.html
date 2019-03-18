@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="qwzn.css" type="text/css">
+    <title>CSS权威指南</title>
+</head>
+
+<body>
+    <a href="www.baidu.com/" target="_blank">有href</a>
+    <!--a标签href要加协议名，单单www开头可能无法打开链接！！-->
+    <br>
+    <a name="nohref">没有href</a>
+    <!--p109(99)-->
+    <div id="toolbar">
+        <a href="one.html">One</a> |
+        <a href="two.html">Two</a> |
+        <a href="three.html">Three</a>
+    </div>
+    <div id="font">
+        <h2>字体</h2>
+        <ul>
+            <h3>font: weight style variant *size(/line-heigt) *family</h3>
+            <h3>font-family</h3>
+            <li id="t">times</li>
+            <li id="v">verdana</li>
+            <li id="h">helvetica</li>
+            <li id="a">arial</li>
+            <li id="s">serif</li>
+            <li id="sa">sana-serif</li>
+            <li id="m">monospace</li>
+            <li id="c">cursive</li>
+            <li id="f">fantasy</li>
+            <h3>font-weight</h3>
+            <li>更粗</li>
+            <b>更粗</b>
+            <br> normal bold bolder lighter 100-900 inherit
+            <h3>font-size</h3>
+            <li>绝对大小：xx-small x-small small medium large x-large xx-large </li>
+            <li>相对大小：samller larger</li>
+            <li>length percentage inherit </li>
+            <h3>font-style</h3>
+            <li>normal italic斜体 oblique倾斜文本 inherit</li>
+            <h3>font-variant 字体变形</h3>
+            <li>small-caps小型大写字母 normal inherit</li>
+        </ul>
+    </div>
+    <div id="text">
+        <h2>文本样式</h2>
+        <ul>
+            <h3>text-indent 缩进文本</h3>
+            <li>lenght percentage(父元素) inherit</li>
+            <h3>text-align 水平对齐</h3>
+            <li>left center right justify两端对齐文本 string inherit</li>
+            <h3>line-height</h3>
+            <li>length percentage number normal inherit</li>
+            <h3>vertical-align 垂直对齐</h3>
+            <li>baseline基线对齐 sub下标 super上标 top text-top middle bottom text-bottom percentage length inherit</li>
+            <h3>word-spacing字间隔</h3>
+            <li>length nomal inherit</li>
+            <h3>letter-spacing 字母间隔</h3>
+            <li>length nomal inherit</li>
+            <h3>text-transform</h3>
+            <li>uppercase lowercase capitalize每单词首字母大写 none inherit</li>
+            <h3>text-decoration</h3>
+            <li>none underline overline line-through blink inherit</li>
+            <h3>taxt-shadow 文本阴影</h3>
+            <li>[color length水平偏移 length垂直偏移] (length模糊半径) </li>
+            <h3>white-space 空白符</h3>
+            <li>
+                <table>
+                    <tr>
+                        <th>value</th>
+                        <th>空白符</th>
+                        <th>换行符</th>
+                        <th>自动换行</th>
+                    </tr>
+                    <tr>
+                        <td>normal</td>
+                        <td>合并</td>
+                        <td>忽略</td>
+                        <td>允许</td>
+                    </tr>
+                    <tr>
+                        <td>nowrap</td>
+                        <td>合并</td>
+                        <td>忽略</td>
+                        <td>不允许</td>
+                    </tr>
+                    <tr>
+                        <td>pre</td>
+                        <td>保留</td>
+                        <td>保留</td>
+                        <td>不允许</td>
+                    </tr>
+                    <tr>
+                        <td>pre-wrap</td>
+                        <td>保留</td>
+                        <td>保留</td>
+                        <td>不允许</td>
+                    </tr>
+                    <tr>
+                        <td>pre-line</td>
+                        <td>合并</td>
+                        <td>保留</td>
+                        <td>不允许</td>
+                    </tr>
+                </table>
+            </li>
+            <h3>direction</h3>
+            <li>ltr rtl inherit</li>
+            <h3>unicode-bidi</h3>
+            <li>normal inherit</li>
+            <li>行内元素可以使用direction：embed bidi-override </li>
+        </ul>
+        <div id="box">
+            <p id="content">dfhienfvnaeo</p>
+        </div>
+    </div>
+    <div id="border">
+        <h2>边框</h2>
+        <ul>
+            <li>单边/border：width style color</li>
+            <h3>border-style (top-right-bottom-left)</h3>
+            <li>none hidden</li>
+            <li>dotted dashed solid double groove ridge inset outset inherit</li>
+            <h3>border-width</h3>
+            <li>thin medium thick length inherit</li>
+            <h3>border-color</h3>
+            <li>color inherit</li>
+            <li>transparent 透明边框</li>
+        </ul>
+        <ul class="css3">
+            <h3>border-radius</h3>
+            <li>length %</li>
+            <h3>box-shadow</h3>
+            <li>h-shadow水平移动 v-shadow垂直移动 color (blur模糊距离 spread阴影尺寸 inset内部阴影)</li>
+            <h3>border-image</h3>
+            <li>border-image-source 用在边框的图片的路径: url(...)</li>
+            <li>border-image-slice 图片边框向内偏移 </li>
+            <li>border-image-width 图片边框的宽度 </li>
+            <li>border-image-outset 边框图像区域超出边框的量 </li>
+            <li>border-image-repeat: repeat平铺 rounded铺满 strentched拉伸</li>
+        </ul>
+    </div>
+    <div id="flexbox">
+        <h2>Flexbox</h2>
+        <ul>
+            <h3>flex container 属性</h3>
+            <li>flex-direction 主轴方向</li>
+            <li>flex-wrap 项目换行方式</li>
+            <li>flex-flow 上两种简写</li>
+            <li>justify-content 主轴对齐方式</li>
+            <li>align-items 交叉轴上对齐方式</li>
+            <li>align-content 多根轴线对齐方式</li>
+            <h3>flex items</h3>
+            <li>order</li>
+            <li>flex-grow</li>
+            <li>flex-shrink</li>
+            <li>flex-basis</li>
+            <li>flex</li>
+            <li>align-self</li>
+        </ul>
+        <div id="shaizibuju">
+            <div class="first-face">
+                <span class="pip"></span>
+            </div>
+            <div class="second-face">
+                <span class="pip"></span>
+                <span class="pip"></span>
+            </div>
+            <div class="third-face">
+                <span class="pip"></span>
+                <span class="pip"></span>
+                <span class="pip"></span>
+            </div>
+            <div class="forth-face">
+                <div class="column">
+                <span class="pip"></span>
+                <span class="pip"></span>
+                </div>
+                <div class="column">
+                <span class="pip"></span>
+                <span class="pip"></span>
+                </div>
+            </div>
+            <div class="fifth-face">
+                <div class="column">
+                    <span class="pip"></span>
+                    <span class="pip"></span>
+                </div>
+                <div class="column">
+                    <span class="pip"></span>
+                </div>
+                <div class="column">
+                    <span class="pip"></span>
+                    <span class="pip"></span>
+                </div>
+            </div>
+            <div class="sixth-face">
+                <div class="column">
+                    <span class="pip"></span>
+                    <span class="pip"></span>
+                    <span class="pip"></span>
+                </div>
+                <div class="column">
+                    <span class="pip"></span>
+                    <span class="pip"></span>
+                    <span class="pip"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>
