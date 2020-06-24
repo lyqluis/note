@@ -1,8 +1,9 @@
 # git
 
+### 分支
 
 
-单独提交 dist -> gh-pages
+### 单独提交 dist -> gh-pages
 ```shell
 git add -f dist  # 因为dist文件被.gitignore忽略
 git commit -m 'first pages'
