@@ -296,7 +296,7 @@ function computed(fn) {
 ```
 
 ## 本文源码
-
+[github](https://github.com/xiannvjiadexiaogouzi/note/blob/master/vue3-learn/my-proxy/my-proxy.js)
 
 ## 参考
 [Vue3 /packages/reactivity 源码](https://github.com/vuejs/vue-next/tree/cf2f278f48e21ff8e2a325c09eb0c7ab5bf5a1f4/packages/reactivity/src)

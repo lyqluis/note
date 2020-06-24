@@ -1,6 +1,3 @@
-
-
-
 const baseHandler = {
   get(target, key) {
     const res = Reflect.get(target, key);
