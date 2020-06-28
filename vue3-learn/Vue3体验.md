@@ -1,6 +1,10 @@
 ## 源码
 [github](https://github.com/xiannvjiadexiaogouzi/vue3-expierence)
 
+## 链接
+[Vue3新特性一篇搞懂](https://juejin.im/post/5e6388366fb9a07cda097c47#)
+[Vue3资料脑图](https://www.processon.com/view/link/5d9c5f65e4b0411c5de78fd0#map)
+
 ## 体验 Vue3
 目前有三种方式可以体验到Vue3：
 - `vue-cli`脚手架创建项目，项目内添加`vue-next`包
@@ -22,7 +26,14 @@ create-vite-app vue3-experirence #项目名
 但是`vue-vite`是下一代开放工具，非常厉害，推荐体验
 
 
-vue3的整体主要分成五大块
+### Vue3 主要新增
+- 性能（比`vue2`快了2倍）
+- tree shaking（按需编译代码）
+- composition api（新的api）
+- ts support（ts 支持）
+- custom renderer api（自定义渲染）
+
+`vue3`的整体主要分成五大块
 - reactivity
 - runtime-dom
 - runtime-core  渲染在多平台上
