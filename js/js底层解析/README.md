@@ -63,6 +63,7 @@ cond1(no)->op1
 cond2(yes)->event
 cond2(no)->op1
 ```
+![](./flow.png)
 
 此时再回到开头的题目，重新分析：
 - 第一次执行：
