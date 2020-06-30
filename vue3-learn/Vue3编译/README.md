@@ -100,7 +100,9 @@ document.querySelector("div").innerHTML = html;
 </body>
 ```
 查看`console`
+
 ![](./dom.png)
+
 可以看到一个简单的`div`标签就有`293`个属性，**所以`dom`操作的频率和次数对性能的影响是非常大的**
 
 
