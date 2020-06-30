@@ -12,7 +12,6 @@
 
 `vdom`就是用一个`js对象`去描述`node节点`的一个抽象语法树
 
-
 ```js
 let vdom = {
   type: "div",  // 标签类型
@@ -39,14 +38,14 @@ let vdom = {
 
 参考在线`vue3`的`compile`出来的`render`函数[vue3 template explorer](https://vue-next-template-explorer.netlify.app/#%7B%22src%22%3A%22%3Cdiv%20id%3D%5C%22app%5C%22%3E%5Cn%20%20%3Cdiv%3EHello%20World%3C%2Fdiv%3E%5Cn%20%20%3Cdiv%3E%7B%7Bname%7D%7D%3C%2Fdiv%3E%5Cn%3C%2Fdiv%3E%22%2C%22ssr%22%3Afalse%2C%22options%22%3A%7B%22mode%22%3A%22module%22%2C%22prefixIdentifiers%22%3Afalse%2C%22optimizeBindings%22%3Afalse%2C%22hoistStatic%22%3Afalse%2C%22cacheHandlers%22%3Afalse%2C%22scopeId%22%3Anull%7D%7D)
 ![](./render1.png)
-它的`ast`:
-![](https://user-gold-cdn.xitu.io/2020/4/22/1719fd770ba11208?imageslim)
+它的`ast`:  
+![](https://user-gold-cdn.xitu.io/2020/4/22/1719fd770ba11208?imageslim)  
 看到在`ast`上存在`dynamicChildren`数组，这就是动态节点数组，而`vue2`中是没有的
 
 
 #### 节点类型细分
-[vue3 template explorer](https://vue-next-template-explorer.netlify.app/#%7B%22src%22%3A%22%3Cdiv%20id%3D%5C%22app%5C%22%3E%5Cn%20%20%3Cdiv%3EHello%20World%3C%2Fdiv%3E%5Cn%20%20%3Cdiv%3E%7B%7Bname%7D%7D%3C%2Fdiv%3E%5Cn%3C%2Fdiv%3E%22%2C%22ssr%22%3Afalse%2C%22options%22%3A%7B%22mode%22%3A%22module%22%2C%22prefixIdentifiers%22%3Afalse%2C%22optimizeBindings%22%3Afalse%2C%22hoistStatic%22%3Afalse%2C%22cacheHandlers%22%3Afalse%2C%22scopeId%22%3Anull%7D%7D)
-![](./render.png)
+[vue3 template explorer](https://vue-next-template-explorer.netlify.app/#%7B%22src%22%3A%22%3Cdiv%20id%3D%5C%22app%5C%22%3E%5Cn%20%20%3Cdiv%3EHello%20World%3C%2Fdiv%3E%5Cn%20%20%3Cdiv%3E%7B%7Bname%7D%7D%3C%2Fdiv%3E%5Cn%3C%2Fdiv%3E%22%2C%22ssr%22%3Afalse%2C%22options%22%3A%7B%22mode%22%3A%22module%22%2C%22prefixIdentifiers%22%3Afalse%2C%22optimizeBindings%22%3Afalse%2C%22hoistStatic%22%3Afalse%2C%22cacheHandlers%22%3Afalse%2C%22scopeId%22%3Anull%7D%7D)  
+![](./render.png)  
 `_createVNode`函数只有当第四个参数存在时，才会将其标记为动态节点，并且第四个参数是不同的
 `vue3`用`patchFlag`表示节点动态类型，不同的类型用不同数字表示
 ```js
@@ -69,12 +68,12 @@ export const enum PatchFlags {
 ```
 [patchFlags 源码](https://github.com/vuejs/vue-next/blob/cf2f278f48e21ff8e2a325c09eb0c7ab5bf5a1f4/packages/shared/src/patchFlags.ts)
 
-如果当同一个节点的动态类型超过两个，这里就用位运算来组合类型显示数字
-![](./render3.png)
+如果当同一个节点的动态类型超过两个，这里就用位运算来组合类型显示数字  
+![](./render3.png)  
 🌰： 同时拥有`id`和`text`属性，就是二进制`1` + `1000`，转化为十进制就是`9`
 
-这样标记了以后，`ast`上会出现`patchFlag`标记动态节点类型，`dynamicProps`记录动态属性`key`
-![](https://user-gold-cdn.xitu.io/2020/4/22/1719fe1243172c9d?imageslim)
+这样标记了以后，`ast`上会出现`patchFlag`标记动态节点类型，`dynamicProps`记录动态属性`key`  
+![](https://user-gold-cdn.xitu.io/2020/4/22/1719fe1243172c9d?imageslim)  
 这样在`diff`运算的时候，只需根据记录的`patchFlag`和`dynamicProps`去寻找对应的`props`进行判断即可，无需再遍历一遍所有的`props`
 
 ##### 静态提升
@@ -84,14 +83,14 @@ export const enum PatchFlags {
   HOISTED = -1, // 静态提升
 // ...
 ```
-![](./render4.png)
+![](./render4.png)  
 当存在大量的静态节点的时候，它会自动将其转化为一个静态节点，并用字符串的形式来保存，以此来节约内存，提高性能
 
 #### 事件缓存
-原先绑定事件的时候，箭头函数的`$event => ...`即使每次内容是一样，但是全新的`function`，所以会自动重新渲染执行一次
-![](./render5.1.png)
-开启`cacheHandlers`后
-![](./render5.2.png)
+原先绑定事件的时候，箭头函数的`$event => ...`即使每次内容是一样，但是全新的`function`，所以会自动重新渲染执行一次  
+![](./render5.1.png)  
+开启`cacheHandlers`后  
+![](./render5.2.png)  
 使用了缓存`cache[1]`来保存箭头函数，这样如果箭头函数没有改动，就可以判定是同一个函数，避免了不必要的重新渲染
 
 ### diff 
@@ -100,5 +99,5 @@ export const enum PatchFlags {
 @待续。。。
 
 ## 参考
-[尤雨溪直播中提到 vue3.0 diff 算法优化细节](https://juejin.im/post/5e9ee8a6f265da47b27da28c)
+[尤雨溪直播中提到 vue3.0 diff 算法优化细节](https://juejin.im/post/5e9ee8a6f265da47b27da28c)  
 [尤大Vue3.0直播虚拟Dom总结(和React对比)](https://juejin.im/post/5e9faa8fe51d4546fe263eda)

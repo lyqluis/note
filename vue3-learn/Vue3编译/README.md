@@ -207,7 +207,7 @@ document.body.appendChild(el)
 [源码](https://github.com/vuejs/vue-next/blob/cf2f278f48e21ff8e2a325c09eb0c7ab5bf5a1f4/packages/compiler-core/src/codegen.ts#L180)
 
 `generate`实际就是根据之前标记的`option`和`ast`不断的拼接字符串，最终拼接出`vdom`生成函数
-![](./generate.png)
+![](./generate.png)  
 参考[vue3在线编译](https://vue-next-template-explorer.netlify.app/)可以看出，右边的`render`函数和内部的`_createVNode`函数都是`generate`函数拼接出来的
 
 
