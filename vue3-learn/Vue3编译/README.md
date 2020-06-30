@@ -46,7 +46,7 @@ $(...).html(...);
 ```
 
 ### 中期 - 模版时代（13、14年之前）
-`underscore`，`batempalte`等模版框架
+`underscore`，`batempalte`等模版框架  
 在`html`的模版中使用不同符号来标记`变量`和`js语法`
 
 ```html
@@ -99,15 +99,13 @@ document.querySelector("div").innerHTML = html;
   </script>
 </body>
 ```
-查看`console`
-
-![](./dom.png)
-
+查看`console`  
+![](./dom.png)  
 可以看到一个简单的`div`标签就有`293`个属性，**所以`dom`操作的频率和次数对性能的影响是非常大的**
 
 
 ### 现期 - `mvvm`时代
-因为`dom`操作成本过高，`react`提出了`虚拟dom`（`vdom`）
+因为`dom`操作成本过高，`react`提出了`虚拟dom`（`vdom`）  
 `vdom`（`virtual dom`）可以实现按需渲染，大大降低性能的损耗
 
 #### vdom的逻辑
@@ -160,9 +158,9 @@ var el = render(vdom);
 // 将dom插入html
 document.body.appendChild(el)
 ```
-然而像`ul`，`li`这样的`vdom`创建写法非常麻烦
-所以`template` -> `vdom` 应运而生
-而这就是`vue3`等现代前端框架的`compile`所做的事情
+然而像`ul`，`li`这样的`vdom`创建写法非常麻烦  
+所以`template` -> `vdom` 应运而生  
+而这就是`vue3`等现代前端框架的`compile`所做的事情  
 
 ## vue3 compile
 
@@ -213,9 +211,3 @@ document.body.appendChild(el)
 参考[vue3在线编译](https://vue-next-template-explorer.netlify.app/)可以看出，右边的`render`函数和内部的`_createVNode`函数都是`generate`函数拼接出来的
 
 
-## vue3 vdom 相对于 vue2
-
-vue3 静态标记
-把vdom里面结构不会变化的`子block`都做一个静态标记
-
-## runtime-core
