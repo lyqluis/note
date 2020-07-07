@@ -63,7 +63,7 @@ export default new Router({
 }
 ```
 `Vue.use()`是一个`vue`的一个安装插件的`api`，所以`vue-router`其实是一个`vue`的插件；  
-最后看到`export`的是一个`router`实例，所以，`vue-router`也是一个`class`
+最后看到`export`的是一个`router`实例，所以，`vue-router`也是一个`class`  
 [关于更多vue插件](https://cn.vuejs.org/v2/guide/plugins.html)  
 
 #### `vue`插件使用:  
@@ -87,7 +87,7 @@ plugin.install = function (vue) {
 
 ### vue-router 结构
 `vue-router`的整体主要结构如下  
-![](https://lc-api-gold-cdn.xitu.io/c1cf2856941cd86b1822.png?imageView2/0/w/1280/h/960/format/webp/ignore-error/1)
+![](./vue-router.png)
 
 从结构图中窥知一二
 
