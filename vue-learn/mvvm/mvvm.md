@@ -405,7 +405,7 @@ class Compile {
 - 通过`dep`&`watcher`发布订阅模式实现数据与视图同步
 
 ## 项目源码
-欢迎移步项目[源码](https://github.com/xiannvjiadexiaogouzi/note/blob/master/Vue/mvvm.html)
+欢迎移步项目[源码](https://github.com/xiannvjiadexiaogouzi/note/blob/master/vue-learn/mvvm/mvvm.html)
 
 **参考**
 - [Vue源码详细解析:transclude,compile,link,依赖,批处理...一网打尽，全解析!](https://segmentfault.com/a/1190000008500946#articleHeader5)
