@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>响应式</title>
+</head>
+
+<body>
+  <div id="app">
+    <input type="text" v-model='c'>
+    <p>{{a.b}}</p>
+    <div>my message is {{c}}</div>
+  </div>
+
+  <script>
+    // mvvm 类
+    class Mvvm {
+      constructor(option) {
+        this.$option = option;
+        this.init();
+      }
+
+      init() {
+        observe(this.$option.data);
+        new Compile(this.$option.el, this);
+      }
+    }
+
+    // 改写数组原型方法 AOP
+    /* Object.defineProperty 严格上来说是可以监听数组的变化, 但对于数组增加length而造成的的变化（原型方法）无法监听到：
+     * 无法监听到数组原型方法的修改（修改了数组内部数据，却无法响应地监听到）
+     * 所以要重写数组原型方法
+     */
+    let newArrProto = (function () {
+      let methods = ['pop', 'shift', 'unshift', 'sort', 'reverse', 'splice', 'push'];
+      // 先获取原型上的方法, 然后创造原型重写
+      let arrProto = Array.prototype;
+      let newArrProto = Object.create(arrProto);
+      methods.forEach(method => {
+        newArrProto[method] = function (...args) {
+          console.log('arr change!')
+          // 用 function 定义该函数使得 this 指向调用的数组；如果用箭头函数 this 会指向 window
+          arrProto[method].call(this, ...args)
+        }
+      })
+      return newArrProto;
+    })()
+
+    // 数据劫持
+    function observe(data) {
+
+      if (Array.isArray(data)) {
+        // 将数组数据原型指针指向自己定义好的原型对象
+        data.__proto__ = newArrProto;
+        return
+      }
+
+      if (typeof data !== 'object') return
+
+      // 循环数据
+      Object.keys(data).forEach(key => {
+        defineReactive(data, key, data[key]);
+      })
+
+      function defineReactive(obj, key, val) {
+        // 递归子属性
+        observe(val);
+        // 添加依赖收集器
+        let dep = new Dep();
+        // 数据劫持
+        Object.defineProperty(obj, key, {
+          enumerable: true, // 可枚举
+          configurable: true, // 可修改
+          get() {
+            console.log('get!', key, val);
+            // 添加订阅
+            Dep.target && dep.addSub(Dep.target);
+            return val
+          },
+          set(newVal) {
+            observe(newVal);
+            console.log('set!', key, newVal);
+            val = newVal;
+            // 发布更新
+            dep.notify(); // 触发更新
+          },
+        })
+      }
+    }
+
+    // 数据渲染/编译
+    class Compile {
+      /* @params
+       * $el - 需要渲染的标签
+       * $vm - mvvm实例
+       */
+      constructor(el, vm) {
+        this.vm = vm;
+        this.$el = document.querySelector(el); // 挂载到实例方便操作
+        this.frag = document.createDocumentFragment();
+        this.reg = /\{\{(.*?)\}\}/g;
+        // 全部移入frag中
+        while (this.$el.firstChild) {
+          let child = this.$el.firstChild;
+          this.frag.appendChild(child);
+        }
+        // 编译元素节点
+        this.compile(this.frag);
+        this.$el.appendChild(this.frag);
+      }
+
+      // 编译
+      compile(frag) {
+        // 遍历 frag node节点
+        Array.from(frag.childNodes).forEach(node => {
+          let txt = node.textContent;
+          // 编译元素节点
+          if (node.nodeType === 1) {
+            this.compileEl(node);
+            // 编译文本 {{}}
+          } else if (node.nodeType === 3 && this.reg.test(txt)) {
+            this.compileTxt(node, RegExp.$1);
+          }
+          // 递归子节点
+          if (node.childNodes && node.childNodes.length) this.compile(node)
+        })
+      }
+      compileTxt(node, key) {
+        this.bind(node, this.vm, key, 'text');
+      }
+      compileEl(node) {
+        // 查找指令 v-xxx
+        let attrList = node.attributes;
+        if (!attrList.length) return;
+        [...attrList].forEach(attr => {
+          let attrName = attr.name;
+          let attrVal = attr.value;
+          // 判断是否带有 ‘v-’ 指令
+          if (attrName.includes('v-')) {
+            // 编译指令 / 绑定 标签value和对应data
+            this.bind(node, this.vm, attrVal, 'model');
+            let oldVal = UTIL.getVal(this.vm, attrVal); // 获取 vm实例 当前值
+            // 增添input事件监听
+            node.addEventListener('input', e => {
+              let newVal = e.target.value; // 获取输入的新值
+              if (newVal === oldVal) return;
+              UTIL.setVal(this.vm, attrVal, newVal);
+              oldVal = newVal;
+            })
+          }
+        });
+      }
+      // 绑定
+      bind(node, vm, key, dir) {
+        let updateFn = this.update(dir);
+        // 第一次渲染
+        updateFn && updateFn(node, UTIL.getVal(vm, key));
+        // 设置观察者
+        new Watcher(vm, key, (newVal) => {
+          // cb 以后的渲染
+          updateFn && updateFn(node, newVal);
+        });
+      }
+      // 更新
+      update(dir) {
+        switch (dir) {
+          case 'text': // 文本更新
+            return (node, val) => node.textContent = typeof val === 'undefined' ? '' : val;
+            break;
+          case 'model': // model指令更新
+            return (node, val) => node.value = typeof val === 'undefined' ? '' : val;
+            break;
+        }
+      }
+    }
+
+    // 依赖收集
+    // 每个数据 收集多个 mvvm 实例的路径来派发更新
+    class Dep {
+      constructor() {
+        this.subs = [];
+      }
+      // 添加 watcher
+      addSub(sub) {
+        this.subs.push(sub);
+      }
+      // 提醒发布
+      notify() {
+        this.subs.forEach(el => el.update())
+      }
+    }
+
+    // 观察者
+    class Watcher {
+      constructor(vm, key, cb) {
+        this.vm = vm;
+        this.key = key;
+        this.cb = cb;
+        this.value = this.get();
+      }
+      // 获取当前值
+      // @param $boolean: true - 数据更新 / false - 初始化
+      // @return 当前的 vm[key]
+      get(boolean) {
+        Dep.target = boolean ? null : this; 
+        // 触发getter，将自己添加到 dep 中
+        let value = UTIL.getVal(this.vm, this.key);
+        Dep.target = null;
+        return value;
+      }
+      update() {
+        // 取得最新值； // 只有初始化的时候触发，更新的时候不触发getter
+        let nowVal = this.get(true);
+        // 对比旧值
+        // console.log('update now' + nowVal)
+        // console.log('update this.val' + this.value)
+        if (this.value !== nowVal) {
+          console.log('update')
+          this.value = nowVal;
+          this.cb(nowVal);
+        }
+      }
+    }
+    // 公共方法
+    const UTIL = {
+      // 获取数据
+      getVal(vm, key) {
+        let keys = key.split('.');
+        let data = vm.$option.data;
+        keys.forEach(key => {
+          data = data[key];
+        })
+        return data;
+      },
+      // 设置数据
+      setVal(vm, key, val) {
+        let keys = key.split('.');
+        let data = vm.$option.data;
+        keys.forEach((key, i) => {
+          if (i < data.length - 1) {
+            data = data[key];
+          } else {
+            data[key] = val;
+          }
+        })
+      }
+    }
+  </script>
+  <script>
+    // 实例
+    let mvvm = new Mvvm({
+      el: '#app',
+      data: {
+        a: {
+          b: 'zheshi a.b'
+        },
+        c: 10,
+        d: {
+          arr: [1, 'dfgv', 5],
+          f: 20
+        }
+      }
+    });
+  </script>
+</body>
+
+</html>
