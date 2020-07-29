@@ -55,3 +55,130 @@
 [一种自动化生成骨架屏的方案 - eleme](https://github.com/Jocs/jocs.github.io/issues/22)
 [一个前端非侵入式骨架屏自动生成方案 - 淘宝特价版](https://korbinzhao.github.io/%E5%89%8D%E7%AB%AF%E5%BC%80%E5%8F%91/%E9%AA%A8%E6%9E%B6%E5%B1%8F/2018/06/23/skeleton-auto-generator/)
 [用纯 DOM 的方式结合 Puppeteer 自动生成网页骨架屏](https://juejin.im/post/5bd5c8edf265da0a951f22aa)
+
+# vue-skeleton-webpack-plugin & vue-cli3 spa 多个skeleton
+
+目录结构
+```shell
+.
+├── public
+├── package.json
+├── vue.config.js               # 配置
+└── src
+     ├── App.vue
+     ├── assets
+     ├── components
+     │   └── HelloWorld.vue
+     ├── main.js
+     ├── router
+     │   └── index.js
+     ├── skeleton               # 新建
+     │   ├── entry-skeleton.js  # 新建
+     │   ├── skeleton1.vue      # 新建
+     │   └── skeleton2.vue      # 新建
+     └── views
+         ├── About.vue
+         └── Home.vue
+```
+
+```html
+<!-- skeleton1.vue -->
+<template>
+  <div class="skeleton">this is skeleton 1</div>
+</template>
+
+<style>
+.skeleton {
+  display: flex;
+  font-size: 2rem;
+  padding: 5px;
+  animation: skeleton-blink .5s ease-in-out
+    infinite;
+}
+
+@keyframes skeleton-blink {
+  50% {
+    opacity: 0.6;
+  }
+}
+</style>
+```
+
+```html
+<!-- skeleton2.vue -->
+<template>
+  <div class="skeleton">
+    this is skeleton 2
+  </div>
+</template>
+```
+
+```js
+// src/skeleton/entry-skeleton.js
+import Vue from 'vue';
+import Skeleton1 from './skeleton1.vue';
+import Skeleton2 from './skeleton2.vue';
+
+export default new Vue({
+  components: {
+    Skeleton1,
+    Skeleton2,
+  },
+
+  template: `
+       <div style='height: 100%;'>
+           <skeleton1 id="skeleton1" style="display:none"/>
+           <skeleton2 id="skeleton2" style="display:none"/>
+       </div>
+    `
+});
+```
+
+```js
+// vue.config.js
+const SkeletonWebpackPlugin = require('vue-skeleton-webpack-plugin');
+const path = require('path')
+
+module.exports = {
+  configureWebpack: {
+    plugins: [
+      new SkeletonWebpackPlugin({
+        webpackConfig: {
+          entry: {
+            app: path.join(__dirname, './src/skeleton/entry-skeleton.js'),//这里为上面的entry-skeleton.js
+          }
+        },
+        minimize: true,
+        quiet: true,
+        router: {
+          mode: 'hash',
+          routes: [
+            {
+              path: '/', //和router.js中的路径一样就行
+              skeletonId: 'skeleton1' //之前的id
+            },
+            {
+              path: '/about',
+              skeletonId: 'skeleton2'
+            }
+          ]
+        }
+      }),
+    ]
+  },
+  //此插件需要css分离
+  css: {
+    // 是否使用css分离插件 ExtractTextPlugin
+    extract: true,
+    // 开启 CSS source maps?
+    sourceMap: false,
+    // css预设器配置项
+    loaderOptions: {},
+    // 启用 CSS modules for all css / pre-processor files.
+    requireModuleExtension: true
+  },
+  // ...
+}
+```
+
+![](./img/skeleton.gif)
