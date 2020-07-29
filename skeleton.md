@@ -58,6 +58,10 @@
 
 # vue-skeleton-webpack-plugin & vue-cli3 spa 多个skeleton
 
+```shell
+npm install vue-skeleton-webpack-plugin
+```
+
 目录结构
 ```shell
 .
