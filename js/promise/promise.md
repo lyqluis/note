@@ -251,6 +251,9 @@ then(onFulfilled, onRejected) {
 }
 ```
 
+这样可以理解为，每次`then`都是对上一次的`promise`实例的结果进行操作 *（无论这个`promise`实例是我们自己`new`的还是上一个`then`返回的）*  
+
+
 #### 实现 `resolvePromise` 函数
 根据规范，`resolvePromise` 规则大致如下：
 - `promise2` 和 `x` 指向同一对象，抛出一个类型错误
@@ -341,7 +344,7 @@ module.exports = Promise;
 ![image](https://image-static.segmentfault.com/228/430/2284301593-5dde3f48e388d_articlex)
 
 ## 源码
-欢迎移步本文[源码](./promise.js)
+欢迎移步本文[源码](./myPromise.js)
 
 ## 最后
 最后，一个 符合**Promise/A+**规范的 `Promise` 就实现了，希望能帮助大家更清楚的了解 `Promise`
