@@ -286,8 +286,236 @@ echo 'aaa' > ./tst.md # 打印‘aaa’覆盖到./tst.md
 man [cmd]
 ```
 
-## 权限相关
+## 用户相关
 
-### 用户添加
+### 相关数据库
+
+#### 用户库
+```shell
+cat /etc/passwd
+```
+
+```shell
+# 用户:密码:uid:gid:用户全名:家目录:shell
+root:*:0:0:System Administrator:/var/root:/bin/sh
+```
+
+#### shell库
+```shell
+cat /etc/group
+```
+
+```shell
+# shell列表
+/bin/bash
+/bin/sh
+/bin/zsh
+... 
+```
+
+#### group库
+```shell
+cat /etc/shells
+```
+
+```shell
+# 组名:组密码:gid:附加用户
+procmod:*:9:root
+certusers:*:29:root,_jabber,_postfix,_cyrus,_calendar,_dovecot
+```
+
+#### 密码库
+```shell
+/etc/shadow  # 用户密码
+/etc/gshadow  # 组密码
+```
 
 ### useradd
+添加用户
+
+```shell
+(sudo) useradd [user]
+```
+
+- `-m` 创建家目录
+- `-g` 指定初始组
+
+```shell
+cat /etc/password # 去该文件查看[user]有没有生成
+```
+
+### passwd
+创建/修改用户密码
+
+```shell
+(sudo) passwd [user]
+```
+不写`[user]`默认当前用户
+
+### id 
+查看用户信息
+
+```shell
+id [user]
+```
+不写`[user]`默认当前用户
+
+```shell
+# 用户id(用户名) 初始组id(组名)  所在组id(组名)
+uid=401(USER1) gid=10(staff) groups=10(staff),30(group2),400(group5),... 
+```
+
+### su 
+切换用户
+
+```shell
+su [user]
+```
+
+- `-` 切换到`[user]`的家目录
+
+```shell
+su - [user]
+```
+
+### exit
+退出当前用户登陆
+
+### whoami
+查看当前登录用户
+
+### who
+罗列当前所有登陆用户
+
+### chsh
+更改当前用户`shell`  
+用户库中的最后一项（用户:密码:uid:gid:用户全名:家目录:shell）
+
+### usermod
+修改用户信息
+- `-g [group] [user]` 修改`[user]`的初始组为`[group]`
+- `-G [group1,group2,...] [user]` 修改`[user]`的附加组为`[group1,group2,...]`
+- `-s [shell绝对路径] [user]` 修改`[user]`的`shell`
+
+### userdel
+删除用户
+
+```shell
+(sudo) userdel [user]
+```
+
+- `-r` 同时删除家目录
+- `-f` 强制删除
+
+### groupadd
+添加组
+
+```shell
+groupadd [group]
+```
+
+```shell
+cat /etc/group  # 查看改文件看看新增组属否添加
+```
+
+### groupmod
+修改组
+- `-n [新组名] [旧组名]` 重命名组
+
+### groupdel
+删除组
+
+```shell
+groupdel [group]
+```
+
+## 权限相关
+
+### 权限基础
+
+```shell
+ll # 列出目录下文件的详细列表
+
+# 列表
+-rw-r--r--  1 USER  staff    17M  8 26 14:52 tst.pdf
+drwxr-xr-x  1 USER  staff   576B  8 30 21:20 Directory
+```
+
+第一列的权限有10位字符
+|第一位|2-4位|5-7位|8-10位|
+|:--:|:--:|:--:|:--:|
+|文件类型|所属者权限|所属组权限|其他用户权限|
+
+#### 文件类型
+- `a` 二进制文件
+- `d` 目录
+- `-` 文件
+- `l` 连接
+
+#### 权限
+每三位组成一个权限
+|位数|权限|文件权限|目录权限|
+|:--:|:--:|:--:|:--:|
+|1|r|可读|可列出目录内内容|
+|2|w|可写|可在目录上增删文件，修改文件名|
+|3|x|可执行（如果是`shell脚本`，则可以选择该权限）|可进入目录|
+
+### 修改权限
+只有文件的所属者/`root`可以修改权限
+
+### chmod
+修改权限
+
+```shell
+chmod [u|g|o|a][=|+|-] [文件]
+```
+
+- `-R` 递归所有子文件统一修改权限
+
+权限类型
+- `u` 所属者权限 *user*
+- `g` 所属组权限 *group*
+- `o` 其他用户权限 *other*
+- `a` 所有权限 *all*
+
+权限操作
+- `+` 添加
+- `-` 减少
+- `=` 覆盖
+
+```shell
+chmod u+x,g=rwx ./tst.md  # 修改./tst.md权限为所属者添加可执行权限，所属组添加全部权限
+```
+
+### 用数字表示权限
+|权限|数字|
+|:--|:--|
+|r|4|
+|w|2|
+|x|1|
+
+```shell
+chmod 764 ./xx.md
+# 等价于
+chmod u=rwx,g=rw,o=r ./xx.md
+```
+
+### chown
+*change owner*
+修改文件所属者
+
+```shell
+chown [user] [文件]
+```
+
+- `-R` 递归所有子文件
+
+### chgrp
+*change group*
+修改文件所属组
+
+```shell
+chgrp [group] [文件]
+```
+
+- `-R` 递归所有子文件
