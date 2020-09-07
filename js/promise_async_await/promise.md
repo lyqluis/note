@@ -343,8 +343,114 @@ module.exports = Promise;
 可以根据检验结果对代码进行调试直至最终全部通过
 ![image](https://image-static.segmentfault.com/228/430/2284301593-5dde3f48e388d_articlex)
 
+## async / await
+`promise`虽然解决了异步操作的地狱回调问题，但是如果有很多异步操作需要相互依赖进行，那么`promise`的链式调用可读性就不好了，而且不能轻易控制流程
+
+```js
+new Promise(resolve => {
+  resolve(a)
+})
+  .then(res => {
+    return b(res)
+  })
+  .then(res => {
+    return c(res)
+  })
+```
+
+`ES7`提出了`async`函数，最终解决了异步问题，配合`promise`将异步操作实现了同步的可读性  
+上面的`promise`可以用`async/await`来解决
+```js
+(async () => {
+  const resA = await Promise.resolve(a)
+  const resB = await Promise.resolve(b(resA))
+  const resC = await Promise.resolve(c(resB))
+})()
+```
+
+`async/await`实际上是对`Generator（生成器）`的封装，是一个语法糖  
+
+### Generator
+
+>ES6 新引入了 `Generator` 函数，可以通过 `yield` 关键字，把函数的执行流挂起，通过`next()`方法可以切换到下一个状态，为改变执行流程提供了可能，从而为异步编程提供解决方案。
+
+运行规则大致如下：  
+- 1.执行生成器不会执行生成器函数体的代码，只是获得一个遍历器
+- 2.一旦调用 `next`，函数体就开始执行，一旦遇到 `yield` 就返回执行结果，暂停执行
+- 3.第二次 `next` 的参数会作为第一次 `yield` 的结果传递给函数体，以此类推，所以第一次 `next` 调用的参数没用
+
+例子
+无传参：  
+```js
+function* myGenerator() {
+  yield '1'
+  yield '2'
+  return '3'
+}
+
+const gen = myGenerator();  // 获取迭代器
+gen.next()  // {value: "1", done: false}
+gen.next()  // {value: "2", done: false}
+gen.next()  // {value: "3", done: true}
+```
+
+传参  
+```js
+function* myGenerator() {
+  console.log(yield '1')
+  console.log(yield '2')
+  console.log(yield '3')
+}
+
+const gen = myGenerator(); // 获取迭代器
+gen.next()
+gen.next('test1') // test1
+gen.next('test2') // test2
+gen.next('test3') // test3
+```
+
+### 封装 generator => async / await
+
+https://mp.weixin.qq.com/s/lUQGeVPiLEQDvUv6M90tRg
+
+https://juejin.im/post/6844904096525189128#heading-13
+
+
+`*/yield`和`async/await`很相似，都可以控制流程暂停过程，但有三点不同：  
+
+- `async/await`自带执行器，不需要手动调用`next()`就能自动执行下一步
+- `async`函数返回值是`Promise`对象，而`Generator`返回的是生成器对象
+- `await`能够返回`Promise`的`resolve/reject`的值
+
+手动执行`promise`的`generator`流程：  
+```js
+function* myGenerator() {
+  yield Promise.resolve(1);
+  yield Promise.resolve(2);
+  yield Promise.resolve(3);
+}
+
+// 手动执行迭代器
+const gen = myGenerator()
+gen.next().value.then(val => {
+  console.log(val)  // 1
+  gen.next().value.then(val => {
+    console.log(val)  // 2
+    gen.next().value.then(val => {
+      console.log(val)  // 3
+    })
+  })
+})
+```
+
+自动执行`next()`：  
+```js
+
+```
+
 ## 源码
-欢迎移步本文[源码](./myPromise.js)
+欢迎移步本文[`myPormise`源码](./myPromise.js)  
+[](./async.js)
 
 ## 最后
 最后，一个 符合**Promise/A+**规范的 `Promise` 就实现了，希望能帮助大家更清楚的了解 `Promise`
