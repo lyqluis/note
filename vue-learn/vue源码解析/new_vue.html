@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>vue源码解析</title>
+  <script src="./vue/dist/vue.js"></script>
+</head>
+
+<body>
+  <div id="demo">
+    <h1>new Vue() 做了什么？</h1>
+    <p>{{desc}}</p>
+    <comp @foo="onFoo"></comp>
+  </div>
+
+  <script>
+    const app = new Vue({
+      el: '#demo',
+      data: {
+        desc: '实例话过程'
+      },
+      beforeCreated(){
+        console.log('beforecreated: 根实例即将创建')
+      },
+      created(){
+        console.log('created: 根实例已经创建')
+      },
+      components: {
+        comp: {
+          template: `<div>comp</div>`
+        }
+      },
+      methods:{
+        onFoo(){
+          console.log('onFoo')
+        }
+      }
+    })
+  </script>
+</body>
+
+</html>
