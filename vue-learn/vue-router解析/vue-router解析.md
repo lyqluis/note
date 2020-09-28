@@ -246,13 +246,17 @@ export default MyRouter
 ### install
 将该组件注册成插件，注入`vue`app
 `install`里面需要做两件事，第一件是混入(`mixin`)`router`实例，第二件是注册`router-view`组件
+- `mixin`混入
+  - 在`beforeCreate`钩子下调用代码
+  - 
 ```js
 // @function install
 MyRouter.install = function (vue) {
 
   // 混入
   vue.mixin({
-    // 查找到根实例组件 绑定当前组件和根实例router对象
+    // 在Vue被实例化的时候调用以下代码，实现vue的扩展
+    // 找到vue根实例组件 绑定当前组件和根实例router对象
     beforeCreate() {
       // 路由根实例
       // 只有vue.$options中存在router的才是router的根实例
@@ -270,15 +274,39 @@ MyRouter.install = function (vue) {
     }
   })
 
+  // 改写vue原型上的$router和$route，指向根路由的router和route
+  Object.defineProperty(Vue.prototype, '$router', {
+    get(){
+      return this._routeRoot.router
+    }
+  })
+
+  Object.defineProperty(Vue.prototype, '$route', {
+    get(){
+      return this._routeRoot.route
+    }
+  })
+
   // 注册router-view组件
   vue.component('router-view', {
     // vue渲染函数
     render(h) {
       // 拿到当前路径
-      let current = this._self._routerRoot._router.history.current
-      let routesMap = this._self._routerRoot._router.routesMap
+      const current = this._self._routerRoot._router.history.current
+      const routesMap = this._self._routerRoot._router.routesMap
       // 渲染当前组件
       return h(routesMap[current])
+    }
+  })
+
+  // 注册router-link组件
+  vue.component('router-link', {
+    props: {
+      to: String
+    },
+    render(h){
+      // 渲染结果 <a :href="to">xxxx</a>
+      return h('a', {attrs: {href: '#' + this.to}}, this.$slots.default)
     }
   })
 }
