@@ -46,6 +46,7 @@ let mvvm = new Mvvm({
 >每个组件实例 / 元素都有相应的 `watcher` 程序实例，它会在组件渲染的过程中把属性记录为依赖，之后当依赖项的 `setter` 被调用时，会通知 `watcher` 重新计算，从而致使它关联的组件得以更新
 
 ![](https://image-static.segmentfault.com/567/427/567427259-4fba7eb9ef4d03ce_articlex)
+
 总结，最重要就是三个步骤
 - **数据劫持**
 用 `Object.defineProperty` 为每个数据设置 `getter/setter`
