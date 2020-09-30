@@ -62,6 +62,7 @@ let mvvm = new Mvvm({
 2. 一个**指令解析/渲染**器 `Compile`，对每个元素节点的指令进行扫描和解析，对应替换数据，以及绑定相应的更新函数
 3. 一个**依赖** `Watcher`类和一个**依赖收集器** `dep`类
 4. 一个`mvvm`类
+
 ![](https://image-static.segmentfault.com/242/927/2429270246-5dcab6ad7885f_articlex)
 
 ### Mvvm
