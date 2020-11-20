@@ -39,6 +39,9 @@ Nuxt.js是一个基于vue的通用应用框架
 - **validate**：校验页面
 - **asyncData & fetch**：页面渲染之前执行，获取异步数据，获取填充状态
 
+### 本demo地址
+[demo](./nuxt-demo)
+
 ### 安装
 ```shell
 # npx安装相当于一次性安装最新的脚手架工具
