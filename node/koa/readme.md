@@ -582,9 +582,9 @@ const static = require('./static')
 app.use(static(__dirname + '/static'))
 ```
 
->`path.resolve(path1, path2, ...)`：给定的路径序列从右到左处理，`path1 + path2 + ...`，返回一个拼接后的绝对路径；
->[path文档](https://nodejs.org/api/path.html)
->`fs.statSync(path)`：返回`path`文件的基本信息；
->`fs.readdirSync(path)`： 以数组返回`path`目录内的所有文件名
->[fs文档](https://nodejs.org/api/fs.html)
+>`path.resolve(path1, path2, ...)`：给定的路径序列从右到左处理，`path1 + path2 + ...`，返回一个拼接后的绝对路径； 
+>[path文档](https://nodejs.org/api/path.html) 
+>`fs.statSync(path)`：返回`path`文件的基本信息；  
+>`fs.readdirSync(path)`： 以数组返回`path`目录内的所有文件名  
+>[fs文档](https://nodejs.org/api/fs.html) 
 
