@@ -1,0 +1,12 @@
+#!/usr/bin/env node
+const program = require('commander')
+const { clone } = require('../lib/download')
+
+const repo = 'github:xiannvjiadexiaogouzi/js-practice'
+
+program.action(async name => {
+  console.log(`🥤创建项目: ${name}`)
+  await clone(repo, name)
+})
+
+program.parse(process.argv)
