@@ -100,7 +100,7 @@ download('github:[user_name]/[repository_name]', './download', err => {
 })
 ```
 
-![](../img/node/node_download.png)
+![](./img/node_download.png)
 
 - promisify
 
@@ -413,7 +413,7 @@ program.version(require('../package').version, '-v', '--version')
 program.parse(process.argv)
 ```
 这样就得到了命令行的解释  
-![](../img/node/node_command.png)
+![](./img/node_command.png)
 
 创建download功能
 ```js
