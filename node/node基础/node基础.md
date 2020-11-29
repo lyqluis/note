@@ -351,6 +351,8 @@ const server = http.createServer((req, res) => {
 ```
 
 ## 自定义npm模块
+>[项目源码](./vue-auto-router-cli)
+
 可以使用以上的node api来创建一个npm包，完成类似于`@vue-cli`的功能
 创建`vue-auto-router-cli`目录，并执行`npm`初始化
 ```shell
