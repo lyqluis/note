@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>lazyload</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    .wrapper {
+      width: 400px;
+      height: 700px;
+      border: 10px solid #bbb;
+      overflow: scroll;
+      position: absolute;
+    }
+
+    img {
+      display: block;
+      width: 300px;
+      height: 500px;
+      margin: 10px auto;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrapper">
+    <img data-src="./img/B1.jpg" alt="">
+    <img data-src="./img/B2.jpg" alt="">
+    <img data-src="./img/B3.jpg" alt="">
+    <img data-src="./img/B4.jpg" alt="">
+    <img data-src="./img/B5.jpg" alt="">
+    <img data-src="./img/B6.jpg" alt="">
+    <img data-src="./img/B7.jpg" alt="">
+    <img data-src="./img/B8.jpg" alt="">
+    <img data-src="./img/B9.jpg" alt="">
+    <img data-src="./img/B10.jpg" alt="">
+    <img data-src="./img/B11.png" alt="">
+    <img data-src="./img/B12.jpg" alt="">
+    <img data-src="./img/B13.jpg" alt="">
+    <img data-src="./img/B14.jpg" alt="">
+    <img data-src="./img/B15.jpg" alt="">
+  </div>
+  <script>
+    const wrapper = document.querySelector('.wrapper')
+    const {
+      clientHeight
+    } = wrapper
+
+    const imgs = Array.from(document.querySelectorAll('img'))
+
+    const loadImg = el => {
+      if (el.src) return
+      el.dataset.src && (el.src = el.dataset.src)
+    }
+
+    /**
+     * el.offsetTop < [wrapper].clientHeight + [werapper].scrollTop
+     */
+    // const check = el => {
+    //   const scrollTop = wrapper.scrollTop
+    //   return el.offsetTop <= scrollTop + clientHeight
+    // }
+
+    /**
+     * el.getBoundingClientRect().top < [wrapper].clientHeight
+     */
+    const check = el => el.getBoundingClientRect().top <= clientHeight
+
+    const lazyload = () => {
+      imgs.forEach(img => {
+        check(img) && loadImg(img)
+      })
+    }
+    
+    window.addEventListener('load', lazyload)
+    wrapper.addEventListener('scroll', lazyload)
+  </script>
+</body>
+
+</html>

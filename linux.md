@@ -302,7 +302,7 @@ root:*:0:0:System Administrator:/var/root:/bin/sh
 
 #### shell库
 ```shell
-cat /etc/group
+cat /etc/shells
 ```
 
 ```shell
@@ -315,7 +315,7 @@ cat /etc/group
 
 #### group库
 ```shell
-cat /etc/shells
+cat /etc/group
 ```
 
 ```shell
