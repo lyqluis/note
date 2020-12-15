@@ -12,14 +12,14 @@ Promise 是由统一规范的，目的是为了让大家自己实现的 `promise
 
 ### Promise 类
 因为是有三种状态，所以先声明三个常量来代表状态
-```
+```js
 const PENDING = 'pending';
 const FULFILLED = 'fulfilled';
 const REJECTED = 'rejected';
 ```
 
 写出一个 `Promise` 类
-```
+```js
 class Promise {
   constructor(executor) {
     // 形参校验
@@ -36,7 +36,7 @@ class Promise {
 }
 ```
 然后我们需要为 `Promise` 的形参`executor` 增加 `resolve` 和 `reject` 两个形参函数；根据定义，他们是由 `JS引擎` 提供的，所以我们需要先提前定义好
-```
+```js
 class Promise {
   constructor(executor) {
     ...
@@ -72,7 +72,7 @@ class Promise {
 ### 初步实现 `then`
 `then` 接收两个回调函数，`onFulfilled`是当 `promise` 实例状态变为 `fulfilled` 时调用的函数，`onRejected` 是实例状态变为 `rejected` 时调用的函数，并且 `then` 返回的是一个 新的 `promise` 实例；
 这里用 `setTimeout` 来模拟 `Promise` 内部的微任务异步
-```
+```js
 class Promise {
   ...
   then(onFulfilled, onRejected) {
@@ -103,7 +103,7 @@ class Promise {
 ```
 ### `then` 的修改
 根据上面的写法，如果我们的 `promise` 实例的 `executor` 中，`resolve` 是一个异步实现的话，那么 `then` 方法是无法实现原来的效果的
-```
+```js
 new Promise((resolve, reject) => {
   setTimeout(() => { resolve(1) })
 }).then(
@@ -113,7 +113,7 @@ new Promise((resolve, reject) => {
 ```
 此时我们自己的 `promise` 实例无法正确输出 `1`，原因在于，当 `executor` 中状态改变（`resolve` / `reject`）是异步实现时，`then` 函数是同步被调用的，此时的 `promise` 的状态还处于 `pending` 状态，无法调用任何函数；
 所以我们需要在 `then` 中添加对于 `pending` 状态的处理；采用订阅发布的模式来解决状态的异步改变
-```
+```js
 class Promise {
   constructor(executor) {
     ...
@@ -167,7 +167,7 @@ class Promise {
 
 ### 链式调用
 之前说了，`then` 方法会返回一个新的 `promise` 实例，并且这个实例的值可以随着 `then` 无限调用而无限传递下去，为了实现这个方法，我们需要在 `then` 中返回一个新的 `promise` 实例
-```
+```js
 then(onFulfilled, onRejected) {
   ...
   // 创建一个新promise实例
@@ -193,7 +193,7 @@ then(onFulfilled, onRejected) {
 ![image](https://image-static.segmentfault.com/141/749/1417490189-5dde3629e73ff_articlex)
 根据[**Promises/A+**](https://promisesaplus.com/)规范，我们将`onFulfilled(value)` 和 `onRejected(reason)` 的结果定义成 `x`，并将其和 `promise2` 传进一个新的函数 `resolvePromise` 进行处理；
 这里我们将这个新的处理函数定义为常函数
-```
+```js
 // @params
 // $pomise2 - 新promise常量
 // $x - onFulfilled / onRejected 处理结果
@@ -202,7 +202,7 @@ then(onFulfilled, onRejected) {
 const RESOLVEPROMISE = function (promise2, x, resolve, reject) { ... }
 ```
 然后再对 `then` 方法进行改写
-```
+```js
 then(onFulfilled, onRejected) {
   ...
   // 返回一个新的实例来实现链式调用
@@ -263,7 +263,7 @@ then(onFulfilled, onRejected) {
   - `x.then` 不是函数，调用`resolve`
 - 以上都不是，调用 `resolve`
 
-```
+```js
 const RESOLVEPROMISE = function (promise2, x, resolve, reject) {
 
   // x 与 promise2 相等 -> 报错
