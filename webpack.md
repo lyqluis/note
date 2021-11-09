@@ -1,12 +1,10 @@
-# Webpack
+#  Webpack
 
-**一般语法**
-```shell
-webpack a.js bundle.js
-```
-*用 webpack 打包 a.js -> bundle.js*
+## 构建流程
 
-## 项目
+![](https://image-static.segmentfault.com/142/390/1423901375-5ff2830c7aff8_articlex)
+
+## 构建化境
 
 ### 初始化项目
 
@@ -14,14 +12,28 @@ webpack a.js bundle.js
 ```shell
 npm init -y
 ```
-*初始化模块，npm 生成 packge.json*
-**`-y` 默认全yes*
+> *初始化模块，npm 生成 packge.json*
+> **`-y` 默认全yes*
 
-安装webpack 以及 webpack脚手架
-```shell
-npm i(install) -D webpack(@版本号) webpack-cli
+### 安装`webpack`
+
+> 一般使用项目环境安装，不推荐全局安装（会锁定版本而造成版本冲突），*开发环境下安装 webpack*
+
+```bash
+# 安装最新稳定版本webpack
+npm install -D webpack
+# 安装指定版本webpack
+npm install -D webpack@<version>
+# 安装webpack v4+版本，需要额外安装webpack-cli
+npm install -D webpack-cli
+
+# 检查本地是否安装成功
+npx webpack -v
+# webpack 5.11.1
+# webpack-cli 4.3.1
 ```
-*开发环境下安装 webpack*
+
+> `npx`为`npm`自带的工具，就是一个软连接，上述就是指向`node_modules/webpack/bin`里面的文件
 
 #### package.json
 ```json
@@ -31,10 +43,21 @@ npm i(install) -D webpack(@版本号) webpack-cli
 ```
 *运行 `npm run build` 就会生成打包文件*
 
-***
+## 构建项目
+
+**一般语法**
+
+```shell
+npx webpack a.js bundle.js
+```
+> *用 webpack 打包 a.js -> bundle.js*
+
+
 
 ## webpack.config.js
-https://www.webpackjs.com/configuration/
+webpack的配置文件
+
+[配置官网](https://www.webpackjs.com/configuration/)
 
 ```js
 const path = require('path');
@@ -45,21 +68,38 @@ module.exports = {
 ```
 #### mode: "production"
 *"production" | "development" | "none"*
-- `development`：将 `process.env.NODE_ENV` 的值设置为 `development`，启用 `NamedChunksPlugin` 和 `NamedModulesPlugin`
-- `production`：将 `process.env.NODE_ENV` 的值设置为 `production`，启用 `FlagDependencyUsagePlugin`, `FlagIncludedChunksPlugin`, `ModuleConcatenationPlugin`, `NoEmitOnErrorsPlugin`, `OccurrenceOrderPlugin`, `SideEffectsFlagPlugin`和 `UglifyJsPlugin`
+
+- `development`
+
+  > 将 `process.env.NODE_ENV` 的值设置为 `development`，启用 `NamedChunksPlugin` 和 `NamedModulesPlugin`
+
+- `production`
+
+  > 将 `process.env.NODE_ENV` 的值设置为 `production`，启用 `FlagDependencyUsagePlugin`, `FlagIncludedChunksPlugin`, `ModuleConcatenationPlugin`, `NoEmitOnErrorsPlugin`, `OccurrenceOrderPlugin`, `SideEffectsFlagPlugin`和 `UglifyJsPlugin`
+
+#### context
+
+*string*
+
+> 绝对路径，默认指向当前项目目录，改动会使得`entry`的相对目录发生改变 
 
 #### entry: "./app/entry"
+
 *string | object | array*  
+
+> 项目入口，执行构建的入口
+
 - **单入口：**
   ```js
-  entry: './path...'
+  entry: './path...',	// string
+  entry: ['./path...', '...']	// array
   ```
 - **多入口：**
   ```js
   entry: {
     index: '../a',
     home: '../b',
-    ...
+    // ...
   }
   ```
 #### output
@@ -68,25 +108,33 @@ module.exports = {
 const path = require('path);
 
 output:{
-  path: path.resolve(__dirname, 'dist'), //必须是绝对路径
-  filename: 'bundle.js',
+  path: path.resolve(__dirname, './dist'), //必须是绝对路径
+  filename: 'main.js',
   publicPath: '/' //通常是CDN地址
 }
 ```
-  - **filename: ''**
-  *文件名*
+  - **filename: ' '**
+    *文件名*
+    
     - **单入口**
-    `filename: 'bundle.js'`
+    ```js
+    filename: 'main.js'
+    ```
     - **多入口**
-    `filename: '[name](_[hash:5])_bundle.js'`
-    *name为entry里的name，hash为计算出来的哈希值(:5为前5位)*
+    ```js
+    filename: '[name]_[hash:5][chunkhash:5]_bundle.js'
+    ```
+    > 多入口的多出口文件名可以使用占位符来区分：
+    >
+    > *`name`为`entry`对象里的`key`，`hash`为计算出来的哈希值(`:5`为前5位，默认20位)，`chunkhash`是以chunk内容作为哈希，可以优化改动（未改动chunk就可以忽略打包）*
   - **path: path.resolve(__dirname, "dist")**
-  string 必须是绝对路径（使用 Node.js 的 path 模块）
-  全局 `const path = require('path');`
-  *输出到dist文件内，__dirname为当前文件所在目录(node的特殊变量)*
+    
+    > string 必须是绝对路径（使用 `Node.js` 的`path`模块）
+    > 全局 `const path = require('path');`
+    > *输出到`dist`目录内，`__dirname`为当前文件所在目录(`node`的特殊变量)*
   - **publicPath: "/assets/"**
-  *string*    
-  *输出解析文件的目录，url 相对于 HTML 页面*
+    *string*    
+    *输出解析文件的目录，url 相对于 HTML 页面*
 
 
 #### module.loader
@@ -118,16 +166,16 @@ module.exports = {
 ##### babel-loader
 将js文件转义为低版本
 
-安装babel-loader插件
+安装`babel-loader`插件
 ```shell
 npm install babel-loader -D
 ```
 
-配置babel-loader
+配置`babel-loader`
 可以直接在`webpack.config.js`中设置，也可以新建`.babelrc`设置
+
 ```js
 // webpack.config.js
-
 module.exports = {
   // ...
   module: {
@@ -176,7 +224,7 @@ module.exports = {
   - `css-loader`：负责处理 `@import` 等语句
   - `postcss-loader`：自动生成浏览器兼容性前缀
     - `autoprefixer`：`postcss-loader`的插件
-- `sass-loader`：负责处理编译 .sass 文件,将其转为 css
+- `sass-loader`：负责处理编译`.sass`文件,将其转为`css`
 - `less-loader`
 - `stylus-loader`
 - ...
@@ -311,7 +359,7 @@ module.exports = {
 ```
 
 ##### CleanWebpackPlugin
-每次打包前清空dist目录
+> 每次打包前清空dist目录
 
 ```shell
 npm install clean-webpack-plugin -D
@@ -319,7 +367,6 @@ npm install clean-webpack-plugin -D
 
 ```js
 //webpack.config.js
-
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
 module.exports = {
@@ -336,10 +383,10 @@ module.exports = {
 [更多`clean-webpack-plugin`配置](https://github.com/johnagan/clean-webpack-plugin)
 
 ##### 热更新
-`webpack`自带插件`HotModuleReplacementPlugin`
+> `webpack`自带插件`HotModuleReplacementPlugin`
+
 ```js
 // webpack.config.js
-
 module.exports = {
   ...
   devServer: {
@@ -428,7 +475,6 @@ module.exports = {
 
 ```js
 // webpack.config.js
-
 module.exports = {
   ...
   devtool: 'cheap-module-eval-source-map',  // 开发环境下使用
@@ -444,6 +490,7 @@ module.exports = {
 [devtool更多](http://webpack.html.cn/configuration/devtool.html)
 
 ##### 
+
 ***
 ## 生产环境 & 开发环境
 根目录分别创建
@@ -482,7 +529,7 @@ npm install webpack-merge -D
 module.exports = {
   公共部分...
 }
-``` 
+```
 
 ```js
 // webpack.prod.config.js && webpack.dev.config.js

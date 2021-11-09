@@ -60,8 +60,8 @@ print working directory
 - `-h` 更改大小单位显示
 
 - `-d` 显示目录信息，而不是目录下的文件
-- `-i`: 显示文件的节点号
-- `-l`: 长格式显示
+- `-i` 显示文件的节点号
+- `-l` 长格式显示
 
 #### -l
 罗列详细列表
@@ -263,11 +263,34 @@ grep [关键词] [文件]
 grep ^'#' /etc/services # 在services文件中搜索开头为‘#’的注释
 ```
 
+### diff
+
+对比文件/子目录内容
+
+```bash
+diff [file1] [file2]
+diff -r [dir1] [dir2]
+diff -r [dir1] [dir2] >> ./differences.md	# 将不同记录到differences.md中
+```
+
+> https://www.computerhope.com/unix/udiff.htm#examples
+>
+> https://www.cnblogs.com/wf-linux/p/9488257.html
+>
+> https://www.cnblogs.com/peida/archive/2012/12/12/2814048.html
+>
+> https://www.cnblogs.com/conscience-remain/p/13838465.html
+
 ### echo
+
 打印
 ```shell
 echo 'aaa' > ./tst.md # 打印‘aaa’覆盖到./tst.md
 ```
+
+
+
+
 
 ## 帮助手册
 

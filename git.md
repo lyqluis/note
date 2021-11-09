@@ -26,6 +26,13 @@ git commit -m "[本次提交的描述]"
 
 # 提交所有已追踪文件的所有修改
 git commit -a
+git commit -am '[提交描述]'
+
+# 修补提交记录
+# 如果commit后有文件忘记提交或需要修补，提交会最终合并成 
+git commit -m 'initial commit'	# 第一次提交
+git add [forgotten_file]
+git commit --amend	# 修补提交记录（修改'initial commit'的记录）
 
 # 添加git user 和 email
 git config --global user.name "[username]"
@@ -44,7 +51,7 @@ git branch
 git branch [分之名]
 
 # 切换当前分支到[分之名]
-git branch [分之名]
+git checkout [分之名]
 
 # 将[分之名]合并到当前分支（合并后[分支名]分支还会保留）
 git merge [分之名]
@@ -54,7 +61,37 @@ git branch -d [分之名]
 git branch -D [分之名]  # 强行删除该分支（可能该分支有东西未提交或者未合并）
 ```
 
+### 比较
+
+```bash
+# 显示出branch1和branch2中差异的部分
+git diff branch1 branch2 --stat
+
+# 显示指定文件的详细差异
+git diff branch1 branch2 具体文件路径
+
+# 显示出所有有差异的文件的详细差异
+git diff branch1 branch2
+
+# 查看branch1分支有，而branch2中没有的log
+git log branch1 ^branch2
+
+# 查看branch2中比branch1中多提交了哪些内容
+git log branch1..branch2
+注意，列出来的是两个点后边（此处即dev）多提交的内容。
+
+# 不知道谁提交的多谁提交的少，单纯想知道有是吗不一样
+git log branch1...branch2
+
+# 在上述情况下，在显示出没个提交是在哪个分支上
+git log --lefg-right branch1...branch2
+# 注意 commit 后面的箭头，根据我们在 –left-right branch1…branch2 的顺序，左箭头 < 表示是 branch1 的，右箭头 > 表示是branch2的。
+```
+
+
+
 ### 远程仓库
+
 ```shell
 # 添加远程仓库（github/...）
 git remote add origin [url]

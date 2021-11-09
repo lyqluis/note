@@ -35,7 +35,10 @@ class Promise {
   }
 }
 ```
-然后我们需要为 `Promise` 的形参`executor` 增加 `resolve` 和 `reject` 两个形参函数；根据定义，他们是由 `JS引擎` 提供的，所以我们需要先提前定义好
+然后我们需要为 `Promise` 的形参`executor` 增加 `resolve` 和 `reject` 两个形参函数；
+
+根据定义，他们是由 `JS引擎` 提供的，所以我们需要先提前定义好
+
 ```js
 class Promise {
   constructor(executor) {
@@ -66,12 +69,13 @@ class Promise {
   }
 }
 ```
-- 当 `promise` 实例调用内部函数 `resolve` 或者 `reject`时，他们被调用时实际上是一个匿名函数，无法取到函数中`this.status`的值，所以需要用 `bind` 提前绑定；
-- 当 `promise` 实例的 `executor` 内部本身本身抛出异常时，`Promise` 是会将异常一并放入 `reject` 函数来处理的，所以增加`try{...}catch(e){...}` 来处理这种情况
+- 当 `promise` 实例调用内部函数 `resolve` 或者 `reject`时，他们被调用时实际上是一个匿名函数，无法取到函数中`this.status`的值，所以需要**用 `bind` 提前绑定**
+- 当 `promise` 实例的 `executor` 内部本身本身抛出异常时，原生`Promise` 是会将异常一并放入 `reject` 函数来处理的，所以**增加`try{...}catch(e){...}` 来处理这种情况**
 
 ### 初步实现 `then`
-`then` 接收两个回调函数，`onFulfilled`是当 `promise` 实例状态变为 `fulfilled` 时调用的函数，`onRejected` 是实例状态变为 `rejected` 时调用的函数，并且 `then` 返回的是一个 新的 `promise` 实例；
-这里用 `setTimeout` 来模拟 `Promise` 内部的微任务异步
+`then` 接收两个回调函数，`onFulfilled`是当 `promise` 实例状态变为 `fulfilled` 时调用的函数，`onRejected` 是实例状态变为 `rejected` 时调用的函数，并且 `then` 返回的是一个 新的 `promise` 实例
+这里使用 `setTimeout` 来模拟 `Promise` 内部的微任务异步
+
 ```js
 class Promise {
   ...
@@ -85,16 +89,15 @@ class Promise {
       // 只有异步后 才能在里面取到 new 好的 promise2
       setTimeout(() => {
         try { // 重新添加try-catch，settimeout 内为异步，无法被外层constructor中的try-catch捕获
-          onFulfilled(this.value); // 以终值作为参数执行 onFulfilled 函数
+          onFulfilled(this.value); // 以终值作为参数执行onFulfilled函数
         } catch (e) { reject(e) }
       })
     }
 
     if (this.status === REJECTED) {
-      // 以拒因作为参数执行 onRejected 函数
       setTimeout(() => {
         try {
-          onRejected(this.reason);
+          onRejected(this.reason)	// 以拒因作为参数执行onRejected函数
         } catch (e) { reject(e) }
       });
     }
@@ -112,7 +115,8 @@ new Promise((resolve, reject) => {
 )
 ```
 此时我们自己的 `promise` 实例无法正确输出 `1`，原因在于，当 `executor` 中状态改变（`resolve` / `reject`）是异步实现时，`then` 函数是同步被调用的，此时的 `promise` 的状态还处于 `pending` 状态，无法调用任何函数；
-所以我们需要在 `then` 中添加对于 `pending` 状态的处理；采用订阅发布的模式来解决状态的异步改变
+所以我们需要在 `then` 中添加对于 `pending` 状态的处理，这里采用订阅发布的模式来解决状态的异步改变
+
 ```js
 class Promise {
   constructor(executor) {
@@ -152,7 +156,7 @@ class Promise {
 +       })
 +     });
 +     
-+     this.onRejectedCbs.push((reason) => {
++     this.onRejectedCbs.push(reason => {
 +       setTimeout(() => {
 +         try {
 +           onRejected(reason)
@@ -194,12 +198,17 @@ then(onFulfilled, onRejected) {
 根据[**Promises/A+**](https://promisesaplus.com/)规范，我们将`onFulfilled(value)` 和 `onRejected(reason)` 的结果定义成 `x`，并将其和 `promise2` 传进一个新的函数 `resolvePromise` 进行处理；
 这里我们将这个新的处理函数定义为常函数
 ```js
-// @params
-// $pomise2 - 新promise常量
-// $x - onFulfilled / onRejected 处理结果
-// $resolve - promise2 中的resolve函数
-// $reject - promise2 中的reject函数
-const RESOLVEPROMISE = function (promise2, x, resolve, reject) { ... }
+/**
+ * @func: 解决promise2和x的比较，在promise2中调用resolve/reject
+ * @param {promise} promise2, 新promise常量
+ * @param {*} x, onFulfilled/onRejected 处理结果
+ * @param {function} resolve, promise2中的resolve函数
+ * @param {function} reject, promise2中的reject函数
+ * @return {*}
+ */
+const RESOLVEPROMISE = function (promise2, x, resolve, reject) { 
+	// ...
+}
 ```
 然后再对 `then` 方法进行改写
 ```js
@@ -317,7 +326,7 @@ const RESOLVEPROMISE = function (promise2, x, resolve, reject) {
   }
 }
 ```
-到这里，我们的 `Promise` 就基本实现了，`then` 方法以外的方法这里就不一一实现了；
+到这里，我们的 `Promise` 就基本实现了，`then` 方法以外的方法这里就不一一实现了
 
 ### 检验
 这边可以全局安装一个插件来检验自己实现的 `Promise` 文件是否符合规范
@@ -358,8 +367,10 @@ new Promise(resolve => {
   })
 ```
 
-`ES7`提出了`async`函数，最终解决了异步问题，配合`promise`将异步操作实现了同步的可读性  
+`ES7`提出了`async`函数，最终解决了异步问题，配合`promise`将异步操作实现了同步的可读性 
+
 上面的`promise`可以用`async/await`来解决
+
 ```js
 (async () => {
   const resA = await Promise.resolve(a)
@@ -375,12 +386,14 @@ new Promise(resolve => {
 >ES6 新引入了 `Generator` 函数，可以通过 `yield` 关键字，把函数的执行流挂起，通过`next()`方法可以切换到下一个状态，为改变执行流程提供了可能，从而为异步编程提供解决方案。
 
 运行规则大致如下：  
-- 1.执行生成器不会执行生成器函数体的代码，只是获得一个遍历器
-- 2.一旦调用 `next`，函数体就开始执行，一旦遇到 `yield` 就返回执行结果，暂停执行
-- 3.第二次 `next` 的参数会作为第一次 `yield` 的结果传递给函数体，以此类推，所以第一次 `next` 调用的参数没用
+- 1. 执行生成器不会执行生成器函数体的代码，只是获得一个遍历器
+- 2. 一旦调用 `next`，函数体就开始执行，一旦遇到 `yield` 就返回执行结果，暂停执行
+- 3. 第二次 `next` 的参数会作为第一次 `yield` 的结果传递给函数体，以此类推，所以第一次 `next` 调用的参数没用
 
-例子
-无传参：  
+例子：
+
+- 无传参
+
 ```js
 function* myGenerator() {
   yield '1'
@@ -394,7 +407,8 @@ gen.next()  // {value: "2", done: false}
 gen.next()  // {value: "3", done: true}
 ```
 
-传参  
+- 传参  
+
 ```js
 function* myGenerator() {
   console.log(yield '1')
